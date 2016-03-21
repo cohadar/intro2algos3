@@ -31,9 +31,9 @@ public class MaxSubarray {
 	}
 
 	public static Ret maxSubarraySquare(int[] A, int left, int right) {
-		int ll = 0;
-		int rr = 0;
-		long ss = 0;
+		int ll = left;
+		int rr = right;
+		long ss = A[ll];
 		for (int l = left; l <= right; l++) {
 			long sum = 0;
 			for (int r = l; r <= right; r++) {
@@ -45,7 +45,7 @@ public class MaxSubarray {
 				}
 			}
 		}
-		return new Ret(ll, rr, ss);
+		return new Ret(ll, rr, ss);	
 	}
 
 	private static Ret maxSubarrayToLeft(int[] A, int l, int m) {
@@ -81,44 +81,39 @@ public class MaxSubarray {
 	private static Ret maxSubarrayMid(int[] A, int l, int m, int r) {
 		Ret retl = maxSubarrayToLeft(A, l, m);
 		Ret retr = maxSubarrayToRight(A, m + 1, r);
+		if (retl.sum < 0 && retr.sum < 0) {
+			return (retl.sum > retr.sum) ? retl : retr;
+		}
+		if (retl.sum < 0) {
+			return retr;
+		}
+		if (retr.sum < 0) {
+			return retl;
+		}
 		return new Ret(retl.l, retr.r, retl.sum + retr.sum);
 	}
 
-	public static Ret maxSubarray(int[] A, int l, int r) {
+	public static Ret maxSubarrayNLogN(int[] A, int l, int r) {
 		if (r - l <= 10) {
 			return maxSubarraySquare(A, l, r);	
 		}
 		int m = (l + r) >>> 1;
-		Ret r1 = maxSubarray(A, l, m);
-		Ret r2 = maxSubarray(A, m + 1, r);
+		Ret r1 = maxSubarrayNLogN(A, l, m);
+		Ret r2 = maxSubarrayNLogN(A, m + 1, r);
 		Ret r3 = maxSubarrayMid(A, l, m, r);
-		if (r1.sum > r2.sum && r1.sum > r3.sum) {
+		if (r1.sum >= r2.sum && r1.sum >= r3.sum) {
 			return r1;
 		}
-		if (r2.sum > r1.sum && r2.sum > r3.sum) {
+		if (r2.sum >= r1.sum && r2.sum >= r3.sum) {
 			return r2;
 		}
 		return r3;
 	}
 
-	private static int minSumLeft(int[] A) {
-		int rr = 0;
-		long min = 0;
-		long sum = 0;
-		for (int i = 0; i < A.length; i++) {
-			sum += A[i];
-			if (min > sum) {
-				min = sum;
-				rr = i;
-			}
-		}
-		return rr;
-	}
-
 	public static Ret maxSubarrayLinear(int[] A) {
 		int ll = 0;
 		int rr = 0;
-		long max = 0;
+		long max = A[0];
 		long suma = 0;
 		long sumb = 0;
 		int al = 0;
@@ -134,34 +129,48 @@ public class MaxSubarray {
 					ll = bl;
 					rr = r;
 				}				
+				suma += A[r];
+				if (max < suma) {
+					max = suma;
+					ll = al;
+					rr = r;
+				}							
 			} else {
-				if (suma < sumb) {
+				if (bl != -1 && suma < sumb) {
 					suma = sumb;
 					al = bl;
 				}
 				sumb = 0;
-				bl = -1;
+				bl = -1;													
+				suma += A[r];
+				// this is needed only when all elements are negative
+				if (max < A[r]) {
+					max = A[r];
+					ll = r;
+					rr = r;
+				}										
 			}
-			suma += A[r];
-			if (max < suma) {
-				max = suma;
-				ll = al;
-				rr = r;
-			}			
 		}
 		return new Ret(ll, rr, max);
 	}
 
-	public static void main(String[] args) {
-		int[] A = randomArray(30000, -1_000_000, 1_000_000);
+	public static void test(String testName, int[] A) {
+		debug(testName);
 		Ret r1 = maxSubarraySquare(A, 0, A.length - 1);
-		Ret r2 = maxSubarray(A, 0, A.length - 1);
+		Ret r2 = maxSubarrayNLogN(A, 0, A.length - 1);
 		Ret r3 = maxSubarrayLinear(A);
 		debug(r1);
 		debug(r2);
 		debug(r3);	
 		assert r1.sum == r2.sum;
 		assert r1.sum == r3.sum;
+	}
+
+	public static void main(String[] args) {
+		for (int i = 0; i < 100; i++) {
+			test("all negative", randomArray(3000, -2000, -1000));
+			test("positive & negative", randomArray(3000, -1000, 1000));			
+		}
 	}
 
 	static void debug(Object...os) {
