@@ -128,8 +128,12 @@ public class MaxSubarray {
 				if (bl == -1) {
 					bl = r;
 				}
-				suma += A[r];
 				sumb += A[r];
+				if (max < sumb) {
+					max = sumb;
+					ll = bl;
+					rr = r;
+				}				
 			} else {
 				if (suma < sumb) {
 					suma = sumb;
@@ -137,18 +141,13 @@ public class MaxSubarray {
 				}
 				sumb = 0;
 				bl = -1;
-				suma += A[r];
 			}
+			suma += A[r];
 			if (max < suma) {
 				max = suma;
 				ll = al;
 				rr = r;
-			}
-			if (max < sumb) {
-				max = sumb;
-				ll = bl;
-				rr = r;
-			}
+			}			
 		}
 		return new Ret(ll, rr, max);
 	}
