@@ -33,6 +33,7 @@ public class MergeSort {
 		for (int i = 0; i < nr; i++) {
 			R[i] = A[m+1 + i];
 		}
+		// WARNING: this code will NOT work if array can contain Integer.MAX_VALUE values.
 		L[nl] = Integer.MAX_VALUE;
 		R[nr] = Integer.MAX_VALUE;
 		int il = 0;
