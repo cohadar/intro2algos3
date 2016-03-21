@@ -101,13 +101,68 @@ public class MaxSubarray {
 		return r3;
 	}
 
+	private static int minSumLeft(int[] A) {
+		int rr = 0;
+		long min = 0;
+		long sum = 0;
+		for (int i = 0; i < A.length; i++) {
+			sum += A[i];
+			if (min > sum) {
+				min = sum;
+				rr = i;
+			}
+		}
+		return rr;
+	}
+
+	public static Ret maxSubarrayLinear(int[] A) {
+		int ll = 0;
+		int rr = 0;
+		long max = 0;
+		long suma = 0;
+		long sumb = 0;
+		int al = 0;
+		int bl = -1;
+		for (int r = 0; r < A.length; r++) {
+			if (A[r] >= 0) {
+				if (bl == -1) {
+					bl = r;
+				}
+				suma += A[r];
+				sumb += A[r];
+			} else {
+				if (suma < sumb) {
+					suma = sumb;
+					al = bl;
+				}
+				sumb = 0;
+				bl = -1;
+				suma += A[r];
+			}
+			if (max < suma) {
+				max = suma;
+				ll = al;
+				rr = r;
+			}
+			if (max < sumb) {
+				max = sumb;
+				ll = bl;
+				rr = r;
+			}
+		}
+		return new Ret(ll, rr, max);
+	}
+
 	public static void main(String[] args) {
 		int[] A = randomArray(30000, -1_000_000, 1_000_000);
 		Ret r1 = maxSubarraySquare(A, 0, A.length - 1);
 		Ret r2 = maxSubarray(A, 0, A.length - 1);
-		assert r1.sum == r2.sum;
+		Ret r3 = maxSubarrayLinear(A);
 		debug(r1);
 		debug(r2);
+		debug(r3);	
+		assert r1.sum == r2.sum;
+		assert r1.sum == r3.sum;
 	}
 
 	static void debug(Object...os) {
