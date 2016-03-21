@@ -25,26 +25,25 @@ public class MergeSort {
 	public static void merge(int[] A, int l, int m, int r) {
 		int nl = m - l + 1;
 		int nr = r - (m+1) + 1;
-		int[] L = new int[nl + 1];
-		int[] R = new int[nr + 1];
+		int[] L = new int[nl];
+		int[] R = new int[nr];
 		for (int i = 0; i < nl; i++) {
 			L[i] = A[l + i];
 		}
 		for (int i = 0; i < nr; i++) {
 			R[i] = A[m+1 + i];
 		}
-		// WARNING: this code will NOT work if array can contain Integer.MAX_VALUE values.
-		L[nl] = Integer.MAX_VALUE;
-		R[nr] = Integer.MAX_VALUE;
 		int il = 0;
 		int ir = 0;
 		for (int i = l; i <= r; i++) {
-			if (L[il] <= R[ir]) {
-				A[i] = L[il];
-				il++;
+			if (il >= L.length) {
+				A[i] = R[ir++];
+			} else if (ir >= R.length) {
+				A[i] = L[il++];
+			} else if (L[il] <= R[ir]) {
+				A[i] = L[il++];
 			} else {
-				A[i] = R[ir];
-				ir++;
+				A[i] = R[ir++];
 			}
 		}
 	}
