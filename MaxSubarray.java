@@ -6,17 +6,7 @@ import java.io.*;
   */
 public class MaxSubarray {
 
-	public static Random random = new Random();
-	
-	public static int[] randomArray(int n, int min, int max) {
-		int[] A = new int[n];
-		for (int i = 0; i < n; i++) {
-			A[i] = min + random.nextInt(max - min + 1);
-		}
-		return A;
-	}
-
-	static class Ret {
+	public static class Ret {
 		final int l;
 		final int r;
 		final long sum;
@@ -32,8 +22,8 @@ public class MaxSubarray {
 
 	public static Ret maxSubarraySquare(int[] A, int left, int right) {
 		int ll = left;
-		int rr = right;
-		long ss = A[ll];
+		int rr = left;
+		long ss = A[left];
 		for (int l = left; l <= right; l++) {
 			long sum = 0;
 			for (int r = l; r <= right; r++) {
@@ -65,7 +55,7 @@ public class MaxSubarray {
 
 	private static Ret maxSubarrayToRight(int[] A, int m, int r) {
 		int ll = m;
-		int rr = r;
+		int rr = m;
 		long ss = A[m];
 		long sum = A[m];
 		for (int i = m + 1; i <= r; i++) {
@@ -110,71 +100,27 @@ public class MaxSubarray {
 		return r3;
 	}
 
-	public static Ret maxSubarrayLinear(int[] A) {
-		int ll = 0;
-		int rr = 0;
-		long max = A[0];
-		long suma = 0;
-		long sumb = 0;
-		int al = 0;
-		int bl = -1;
-		for (int r = 0; r < A.length; r++) {
-			if (A[r] >= 0) {
-				if (bl == -1) {
-					bl = r;
-				}
-				sumb += A[r];
-				if (max < sumb) {
-					max = sumb;
-					ll = bl;
-					rr = r;
-				}				
-				suma += A[r];
-				if (max < suma) {
-					max = suma;
-					ll = al;
-					rr = r;
-				}							
-			} else {
-				if (bl != -1 && suma < sumb) {
-					suma = sumb;
-					al = bl;
-				}
-				sumb = 0;
-				bl = -1;													
-				suma += A[r];
-				// this is needed only when all elements are negative
-				if (max < A[r]) {
-					max = A[r];
-					ll = r;
-					rr = r;
-				}										
+	public static Ret maxSubarrayKadane(int[] A) {
+		long bestSum = A[0];
+		long currSum = A[0];
+		int bestLeft = 0;
+		int bestRight = 0;
+		int currLeft = 0;
+		int currRight = 0;		
+		for (int i = 1; i < A.length; i++) {
+			currSum += A[i];
+			currRight = i;
+			if (currSum < A[i]) {
+				currSum = A[i];
+				currLeft = i;
 			}
-		}
-		return new Ret(ll, rr, max);
-	}
-
-	public static void test(String testName, int[] A) {
-		debug(testName);
-		Ret r1 = maxSubarraySquare(A, 0, A.length - 1);
-		Ret r2 = maxSubarrayNLogN(A, 0, A.length - 1);
-		Ret r3 = maxSubarrayLinear(A);
-		debug(r1);
-		debug(r2);
-		debug(r3);	
-		assert r1.sum == r2.sum;
-		assert r1.sum == r3.sum;
-	}
-
-	public static void main(String[] args) {
-		for (int i = 0; i < 100; i++) {
-			test("all negative", randomArray(3000, -2000, -1000));
-			test("positive & negative", randomArray(3000, -1000, 1000));			
-		}
-	}
-
-	static void debug(Object...os) {
-		System.err.printf("%.65536s\n", Arrays.deepToString(os));
+			if (bestSum < currSum) {
+				bestSum = currSum;
+				bestLeft = currLeft;
+				bestRight = currRight;
+			}
+		} 
+		return new Ret(bestLeft, bestRight, bestSum);
 	}
 
 }
