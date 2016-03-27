@@ -1,3 +1,0 @@
-InsertionSort, MergeSort + InversionCount,
-BinarySearch, UpperBound, LowerBound,
-MaxSubarray (Kadane's),
