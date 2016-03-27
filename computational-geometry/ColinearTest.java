@@ -35,16 +35,17 @@ public class ColinearTest {
 
 	public static int numColinearN2LgN(Point2D[] P) {
 		int ret = 0;
+		// we MUST sort by X first
+		Arrays.sort(P, 0, P.length, new Comparator<Point2D> () {
+			public int compare(Point2D a, Point2D b) {
+				return Double.compare(a.getX(), b.getX());
+			}
+		});
 		for (int i = 0; i < P.length - 1; i++) {
 			final Point2D ref = P[i];
 			Arrays.sort(P, i+1, P.length, new Comparator<Point2D> () {
 				public int compare(Point2D a, Point2D b) {
 					return (int)Math.signum(crossProduct(b.subtract(ref), a.subtract(ref)));
-					// Point2D c = a.subtract(ref);
-					// Point2D d = b.subtract(ref);
-					// double angleA = Math.atan2(c.getY(), c.getX());
-					// double angleB = Math.atan2(d.getY(), d.getX());
-					// return Double.compare(angleA, angleB);					
 				}
 			});
 			for (int j = i + 1; j < P.length; j++) {

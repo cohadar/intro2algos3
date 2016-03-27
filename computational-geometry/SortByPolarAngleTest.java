@@ -54,8 +54,6 @@ public class SortByPolarAngleTest {
 				return (int)Math.signum(crossProduct(b.subtract(pr), a.subtract(pr)));
 			}
 		});		
-		debug(P);
-		debug(Q);
 		assertArrayEquals(P, Q);
 	}
 
