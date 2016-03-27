@@ -25,7 +25,7 @@ public class SortByPolarAngleTest {
 
 	@Test
 	public void test() {
-		Point2D pr = new Point2D(-4, -3); // must ne min on both dimensions
+		Point2D pr = new Point2D(4, -3); // reference point must be outside bounding rectangle
 		Point2D p0 = new Point2D(1, 0);
 		Point2D p1 = new Point2D(1, 1);
 		Point2D p2 = new Point2D(0, 1);
@@ -50,6 +50,7 @@ public class SortByPolarAngleTest {
 		// sort Q by crossProduct
 		Arrays.sort(Q, new Comparator<Point2D> () {
 			public int compare(Point2D a, Point2D b) {
+				// positive crossProduct is negative angle, hence (b, a)
 				return (int)Math.signum(crossProduct(b.subtract(pr), a.subtract(pr)));
 			}
 		});		
