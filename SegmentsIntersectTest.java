@@ -48,19 +48,37 @@ public class SegmentsIntersectTest {
 		double c4 = crossProduct(p2.subtract(p1), p4.subtract(p1));
 		boolean straddle12 = Math.min(c1, c2) < 0.0 && Math.max(c1, c2) > 0.0;
 		boolean straddle34 = Math.min(c3, c4) < 0.0 && Math.max(c3, c4) > 0.0;
-		if (straddle12 && straddle12) {
+		if (straddle12 && straddle34) {
 			return true;
 		}
 		if (fuzzyEqual(c1, 0.0, 1e-9) && betweenColinear(p3, p1, p4)) {
 			return true;
 		}
+		if (fuzzyEqual(c2, 0.0, 1e-9) && betweenColinear(p3, p2, p4)) {
+			return true;
+		}		
+		if (fuzzyEqual(c3, 0.0, 1e-9) && betweenColinear(p1, p3, p2)) {
+			return true;
+		}				
+		if (fuzzyEqual(c4, 0.0, 1e-9) && betweenColinear(p1, p4, p2)) {
+			return true;
+		}						
 		return false;
 	}
 
 	@Test
 	public void testSegmentsIntersect() {
+		// straddle
 		assertTrue(segmentsIntersect(new Point2D(2, 1), new Point2D(3, 3), new Point2D(1, 4), new Point2D(4, 2)));
+		// endpoint p1 on segment p3p4
 		assertTrue(segmentsIntersect(new Point2D(1, 1), new Point2D(6, 7), new Point2D(2, 0), new Point2D(0, 2)));
+		// endpoint p2 on segment p3p4
+		assertTrue(segmentsIntersect(new Point2D(6, 7), new Point2D(1, 1), new Point2D(2, 0), new Point2D(0, 2)));		
+		// endpoint p3 on segment p1p2
+		assertTrue(segmentsIntersect(new Point2D(2, 0), new Point2D(0, 2), new Point2D(1, 1), new Point2D(6, 7)));		
+		// endpoint p4 on segment p1p2
+		assertTrue(segmentsIntersect(new Point2D(2, 0), new Point2D(0, 2), new Point2D(6, 7), new Point2D(1, 1)));				
+		// no intersection
 		assertFalse(segmentsIntersect(new Point2D(1, 4), new Point2D(3, 1), new Point2D(3, 3), new Point2D(5, 2)));
 	}
 
