@@ -1,0 +1,6 @@
+insertion sort
+merge sort
+binary search / upper, lower
+
+kadane's
+
