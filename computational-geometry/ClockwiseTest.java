@@ -54,8 +54,26 @@ public class ClockwiseTest {
 				diffs++;
 			}
 		}
-		debug(diffs);
+		debug("diffs", diffs);
 		assertTrue(diffs < 2);
+	}
+
+	@Test
+	public void testCrossProductOfNormalizedPoints() {
+		List<Double> L = new ArrayList<Double>();
+		for (double angle = 0; angle <= 2*Math.PI; angle += Math.PI/12) {
+			L.add(angle);
+		}
+		Point2D p0 = new Point2D(1, 0);
+		for (Double a : L) {
+			for (Double b : L) {
+				Point2D p1 = rotate(p0, a);
+				Point2D p2 = rotate(p0, b);
+				double cp = crossProduct(p1, p2);
+				debug(cp);
+				assert -1.0 <= cp && cp <= 1.0 : "out of range, cp: " + cp;
+			}
+		}
 	}
 
 	static void debug(Object...os) {
