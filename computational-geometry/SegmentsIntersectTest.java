@@ -1,68 +1,63 @@
 import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import javafx.geometry.Point2D;
 
 /**
   * @author Mighty Cohadar 
   */
 public class SegmentsIntersectTest {
 
-	/** 
-	 *	@returns true iff y is within relative or absolute 'epsilon' of x. 
-	 *  By default, 'epsilon' is 1e-6.
-	 */
-	public static boolean fuzzyEqual(double x, double y, double epsilon) {
-		// Check absolute precision.
-		if (Math.abs(x - y) <= epsilon) {
-			return true;
+	static class Point2D {
+		final int x;
+		final int y;
+		Point2D(int x, int y) {
+			this.x = x;
+			this.y = y;
 		}
-		// Is x or y too close to zero?
-		if ((Math.abs(x) <= epsilon) || (Math.abs(y) <= epsilon)) {
-				return false;
-			}
-		// Check relative precision.
-		return (Math.abs((x - y) / x) <= epsilon) || (Math.abs((x - y) / y) <= epsilon);
+		public Point2D subtract(Point2D that) {
+			return new Point2D(this.x - that.x, this.y - that.y);
+		}
+		public String toString() {
+			return String.format("(x=%d, y=%d)", x, y);
+		}	
 	}
 
-	public static double crossProduct(Point2D p1, Point2D p2) {
-		return p1.getX() * p2.getY() - p1.getY() * p2.getX();
+	public static int crossProduct(Point2D p1, Point2D p2) {
+		return p1.x * p2.y - p1.y * p2.x;
 	}		
 
-	// we assume points are colinear
-	public static boolean betweenColinear(Point2D a, Point2D m, Point2D b) {
-		if (Math.min(a.getX(), b.getX()) <= m.getX()
-		&&  Math.max(a.getX(), b.getX()) >= m.getX()
-        &&  Math.min(a.getY(), b.getY()) <= m.getY()
-        &&  Math.max(a.getY(), b.getY()) >= m.getY()) {
-			return true;
-		}
-		return false;
+	public int direction(Point2D r, Point2D a, Point2D b) {
+		return crossProduct(a.subtract(r), b.subtract(r));
 	}
 
-	
+	public boolean onSegment(Point2D r, Point2D a, Point2D b) {
+		return Math.min(a.x, b.x) <= r.x && r.x <= Math.max(a.x, b.x) 
+		    && Math.min(a.y, b.y) <= r.y && r.y <= Math.max(a.y, b.y);
+	}	
+
 	public boolean segmentsIntersect(Point2D p1, Point2D p2, Point2D p3, Point2D p4) {
-		double c1 = crossProduct(p4.subtract(p3), p1.subtract(p3));
-		double c2 = crossProduct(p4.subtract(p3), p2.subtract(p3));
-		double c3 = crossProduct(p2.subtract(p1), p3.subtract(p1));
-		double c4 = crossProduct(p2.subtract(p1), p4.subtract(p1));
-		boolean straddle12 = Math.min(c1, c2) < 0.0 && Math.max(c1, c2) > 0.0;
-		boolean straddle34 = Math.min(c3, c4) < 0.0 && Math.max(c3, c4) > 0.0;
-		if (straddle12 && straddle34) {
+		int d1 = direction(p1, p3, p4);
+		int d2 = direction(p2, p3, p4);
+		int d3 = direction(p3, p1, p2);
+		int d4 = direction(p4, p1, p2);
+		if (d1 < 0 && d2 > 0 || d1 > 0 && d2 < 0) {
 			return true;
 		}
-		if (fuzzyEqual(c1, 0.0, 1e-9) && betweenColinear(p3, p1, p4)) {
+		if (d3 < 0 && d4 > 0 || d3 > 0 && d4 < 0) {
 			return true;
 		}
-		if (fuzzyEqual(c2, 0.0, 1e-9) && betweenColinear(p3, p2, p4)) {
+		if (d1 == 0 && onSegment(p1, p3, p4)) {
 			return true;
-		}		
-		if (fuzzyEqual(c3, 0.0, 1e-9) && betweenColinear(p1, p3, p2)) {
+		}
+		if (d2 == 0 && onSegment(p2, p3, p4)) {
 			return true;
-		}				
-		if (fuzzyEqual(c4, 0.0, 1e-9) && betweenColinear(p1, p4, p2)) {
+		}
+		if (d3 == 0 && onSegment(p3, p1, p2)) {
 			return true;
-		}						
+		}
+		if (d4 == 0 && onSegment(p4, p1, p2)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -80,10 +75,6 @@ public class SegmentsIntersectTest {
 		assertTrue(segmentsIntersect(new Point2D(2, 0), new Point2D(0, 2), new Point2D(6, 7), new Point2D(1, 1)));				
 		// no intersection
 		assertFalse(segmentsIntersect(new Point2D(1, 4), new Point2D(3, 1), new Point2D(3, 3), new Point2D(5, 2)));
-	}
-
-	static void debug(Object...os) {
-		System.err.printf("%.65536s\n", Arrays.deepToString(os));
 	}
 
 }
