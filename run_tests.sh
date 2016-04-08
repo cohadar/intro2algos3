@@ -3,10 +3,14 @@
 # compile all java files
 javac -target 1.8 -source 1.8 -cp '.:../lib/*' -Xlint:unchecked -Xlint:deprecation *.java
 
-# run all test files
+# collect test class names
+classList=""
 for file in *Test.java; do
-	echo ================================================
-	echo $file
-	echo ------------------------------------------------
-    java -Xss512m -ea -cp '.:../lib/*' org.junit.runner.JUnitCore ${file%.*}
+    baseName=${file%.java}
+    echo $baseName
+    classList="$classList $baseName"
 done
+echo '-------------------------'
+
+# run all tests
+java -Xss512m -ea -cp '.:../lib/*' org.junit.runner.JUnitCore $classList

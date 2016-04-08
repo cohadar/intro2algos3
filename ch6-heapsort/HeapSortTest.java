@@ -1,6 +1,6 @@
 import java.util.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
 
 /**
   * @author Mighty Cohadar 
@@ -10,13 +10,13 @@ public class HeapSortTest {
 	private void assertHeap(int[] H) {
 		for (int c = H.length - 1; c >= 2; c--) {
 			int p = c / 2;
-			assertTrue("heap", H[p] >= H[c]);
+			assertTrue(H[p] >= H[c], "heap");
 		}
 	}
 
 	private void assertSorted(int[] H) {
 		for (int i = 2; i < H.length; i++) {
-			assertTrue("sorted", H[i - 1] <= H[i]);
+			assertTrue(H[i - 1] <= H[i], "sorted");
 		}
 	}
 
@@ -41,9 +41,7 @@ public class HeapSortTest {
 		int[] A = randomArray(1000, -1000, 1000);
 		int[] H = array021(A);
 		HeapSort.heapSort(H, A.length);
-		debug(H);
-		assertSorted(H);		
-
+		assertSorted(H);
 	}
 
 	public static Random random = new Random();
