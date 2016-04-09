@@ -1,6 +1,6 @@
 import java.util.*;
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
   * @author Mighty Cohadar 
@@ -10,13 +10,13 @@ public class HeapSortTest {
 	private void assertHeap(int[] H) {
 		for (int c = H.length - 1; c >= 2; c--) {
 			int p = c / 2;
-			assertTrue(H[p] >= H[c], "heap");
+			assertTrue("heap", H[p] >= H[c]);
 		}
 	}
 
 	private void assertSorted(int[] H) {
 		for (int i = 2; i < H.length; i++) {
-			assertTrue(H[i - 1] <= H[i], "sorted");
+			assertTrue("sorted", H[i - 1] <= H[i]);
 		}
 	}
 

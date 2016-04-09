@@ -1,13 +1,13 @@
 import java.util.*;
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
   * @author Mighty Cohadar 
   */
 public class MaxPriorityQueueTest {
 
-	@Test(invocationCount = 100)
+	@Test
 	public void testSet() {
 		MaxPriorityQueue<Double> Q = new MaxPriorityQueue<>(1000, new Comparator<Double> () {
 			public int compare(Double a, Double b) {
@@ -23,13 +23,13 @@ public class MaxPriorityQueueTest {
 		double prev = 1.0;
 		for (int i = 0; i < 1000; i++) {
 			double head = Q.poll();
-			assertTrue(prev >= head, "sorted");
+			assertTrue("sorted", prev >= head);
 			prev = head;
 		}
-		assertNull(Q.poll(), "empty at the end");		
+		assertNull("empty at the end", Q.poll());		
 	}
 
-	@Test(invocationCount = 100)
+	@Test
 	public void testAddAndPoll() {
 		MaxPriorityQueue<Double> Q = new MaxPriorityQueue<>(1000, new Comparator<Double> () {
 			public int compare(Double a, Double b) {
@@ -44,13 +44,13 @@ public class MaxPriorityQueueTest {
 		double prev = 1.0;
 		for (int i = 0; i < 1000; i++) {
 			double head = Q.poll();
-			assertTrue(prev >= head, "sorted");
+			assertTrue("sorted", prev >= head);
 			prev = head;
 		}
-		assertNull(Q.poll(), "empty at the end");
+		assertNull("empty at the end", Q.poll());
 	}
 
-	@Test(invocationCount = 100)
+	@Test
 	public void testPoll() {
 		MaxPriorityQueue<Double> Q = new MaxPriorityQueue<>(1000, new Comparator<Double> () {
 			public int compare(Double a, Double b) {
@@ -63,14 +63,14 @@ public class MaxPriorityQueueTest {
 		double prev = 1.0;
 		for (int i = 0; i < 1000; i++) {
 			double head = Q.poll();
-			assertTrue(prev >= head, "sorted");
+			assertTrue("sorted", prev >= head);
 			prev = head;
 		}
-		assertNull(Q.poll(), "empty at the end");
+		assertNull("empty at the end", Q.poll());
 	}
 
 
-	@Test(invocationCount = 100)
+	@Test
 	public void testPeek() {
 		MaxPriorityQueue<Integer> Q = new MaxPriorityQueue<>(1000, new Comparator<Integer> () {
 			public int compare(Integer a, Integer b) {
