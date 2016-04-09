@@ -7,25 +7,51 @@ import java.io.*;
 public class MaxPriorityQueue<E> {
 
 	private int n = 0;
-	private final int capacity;
 	private final Comparator<E> comparator;
-	private List<E> list;
+	private E[] data;
 
-	public MaxPriorityQueue(int capacity, Comparator<E> comparator) {
-		this.capacity = capacity;
+	@SuppressWarnings("unchecked")
+	public MaxPriorityQueue(int minCapacity, Comparator<E> comparator) {
+		assert minCapacity >= 0;
+		this.data = (E[]) new Object[1 + minCapacity]; // data is stored from index 1
 		this.comparator = comparator;
-		this.list = new ArrayList<>();
-		this.list.add(null); // list starts from 1
+	}
+
+	void verifyHeap() {
+		for (int p = n / 2; p >= 1; p--) {
+			int l = p * 2;
+			int r = l + 1;
+			if (l <= n) {
+				assert comparator.compare(data[l], data[p]) <= 0 : "invalid heap";
+			}
+			if (r <= n) {
+				assert comparator.compare(data[r], data[p]) <= 0 : "invalid heap";
+			}
+		}
 	}
 
 	public boolean add(E e) {
 		if (e == null) {
 			throw new NullPointerException("cannot insert null elements");
 		}
-		if (list.add(e)) {
-			n++;
-			floatUp(n);
+		n++;
+		ensureCapacity(n);
+		data[n] = e;
+		floatUp(n);
+		return true;
+	}
+
+	public boolean remove(E e) {
+		E t = poll();
+		if (t == e) {
 			return true;
+		}
+		for (int i = 1; i <= n; i++) {
+			if (e == data[i]) {
+				data[i] = t;
+				floatUp(i);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -34,22 +60,24 @@ public class MaxPriorityQueue<E> {
 		if (n == 0) {
 			return null;
 		}
-		return list.get(1);
+		return data[1];
 	} 
 
 	public E poll() {
 		if (n == 0) {
 			return null;
 		}
-		E ret = list.get(1);
-		list.set(1, list.get(n--));
+		E ret = data[1];
+		data[1] = data[n];
+		data[n] = null;
+		n--;
 		sinkDown(1);
 		return ret;
 	} 
 
 	// this is the method that java's PriorityQueue lacks.
 	public E set(int index, E e) {
-		E ret = list.get(index);
+		E ret = data[index];
 		int comp = comparator.compare(e, ret);
 		if (comp < 0) {
 			sinkDown(index);
@@ -64,39 +92,50 @@ public class MaxPriorityQueue<E> {
 	}
 
 	private void sinkDown(int p) {
-		E t = list.get(p);
+		E t = data[p];
 		while (p <= n / 2) {
 			int l = 2 * p;
 			int r = l + 1;
 			int c = -1;
-			if (l <= n && comparator.compare(t, list.get(l)) < 0) {
+			if (l <= n && comparator.compare(t, data[l]) < 0) {
 				c = l;
 			}
-			if (r <= n && comparator.compare((c == -1)?t:list.get(c), list.get(r)) < 0) {
+			if (r <= n && comparator.compare((c == -1)?t:data[c], data[r]) < 0) {
 				c = r;
 			}			
 			if (c == -1) {
 				break;
 			} else {
-				list.set(p, list.get(c));
+				data[p] = data[c];
 				p = c;
 			}
 		}
-		list.set(p, t);
+		data[p] = t;
 	}
 
 	private void floatUp(int c) {
-		E t = list.get(c);
+		E t = data[c];
 		while (c > 1) {
 			int p = c / 2;
-			if (comparator.compare(list.get(p), t) < 0) {
-				list.set(c, list.get(p));
+			if (comparator.compare(data[p], t) < 0) {
+				data[c] = data[p];
 				c = p;
 			} else {
 				break;
 			}
 		}
-		list.set(c, t);
+		data[c] = t;
+	}
+
+	public void ensureCapacity(int minCapacity) {
+		int oldCapacity = data.length - 1;
+		if (minCapacity > oldCapacity) {
+			int newCapacity = (oldCapacity * 3) / 2 + 1;
+			if (newCapacity < minCapacity) {
+				newCapacity = minCapacity;
+			}
+			data = Arrays.copyOf(data, newCapacity + 1);
+		}
 	}
 
 }
