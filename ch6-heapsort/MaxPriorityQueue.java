@@ -42,14 +42,15 @@ public class MaxPriorityQueue<E> {
 	}
 
 	public boolean remove(E e) {
-		E t = poll();
-		if (t == e) {
-			return true;
-		}
 		for (int i = 1; i <= n; i++) {
 			if (e == data[i]) {
-				data[i] = t;
-				floatUp(i);
+				data[i] = data[n];
+				data[n] = null;
+				n--;
+				if (i <= n) {
+					sinkDown(i);
+					floatUp(i);
+				}
 				return true;
 			}
 		}
