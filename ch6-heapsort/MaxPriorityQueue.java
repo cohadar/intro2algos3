@@ -57,6 +57,18 @@ public class MaxPriorityQueue<E> {
 		return false;
 	}
 
+	public boolean replace(E oldElement, E newElement) {
+		for (int i = 1; i <= n; i++) {
+			if (oldElement == data[i]) {
+				data[i] = newElement;
+				sinkDown(i);
+				floatUp(i);
+				return true;				
+			}
+		}
+		return false;
+	}
+
 	public E peek() {
 		if (n == 0) {
 			return null;
@@ -75,18 +87,6 @@ public class MaxPriorityQueue<E> {
 		sinkDown(1);
 		return ret;
 	} 
-
-	// this is the method that java's PriorityQueue lacks.
-	public E set(int index, E e) {
-		E ret = data[index];
-		int comp = comparator.compare(e, ret);
-		if (comp < 0) {
-			sinkDown(index);
-		} else if (comp > 0) {
-			floatUp(index);	
-		}
-		return ret;
-	}
 
 	public int size() {
 		return n;
@@ -131,10 +131,7 @@ public class MaxPriorityQueue<E> {
 	public void ensureCapacity(int minCapacity) {
 		int oldCapacity = data.length - 1;
 		if (minCapacity > oldCapacity) {
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
-			if (newCapacity < minCapacity) {
-				newCapacity = minCapacity;
-			}
+			int newCapacity = Math.max(minCapacity, oldCapacity * 3 / 2 + 1);
 			data = Arrays.copyOf(data, newCapacity + 1);
 		}
 	}

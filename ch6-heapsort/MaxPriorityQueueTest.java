@@ -59,27 +59,37 @@ public class MaxPriorityQueueTest {
 
 
 	@Test
-	public void testSet() {
+	public void testReplace() {
 		MaxPriorityQueue<Double> Q = new MaxPriorityQueue<>(1000, new Comparator<Double> () {
 			public int compare(Double a, Double b) {
 				return Double.compare(a, b);
 			}
 		});
+		Double[] X = new Double[1000];
 		for (int i = 0; i < 1000; i++) {
-			Q.add(Math.random());			
+			Q.add(X[i] = Math.random());			
 			assertEquals(Q.size(), i + 1);
 		}
-		for (int i = 0; i < 3000; i++) {
-			Q.set(1 + random.nextInt(1000), Math.random());
+		Double[] A = new Double[1000];
+		for (int i = 0; i < 1000; i++) {
+			Q.replace(X[i], A[i] = Math.random());
 			assertEquals(Q.size(), 1000);
 		}		
-		double prev = 1.0;
+		Arrays.sort(A, new Comparator<Double> () {
+			public int compare(Double a, Double b) {
+				return Double.compare(b, a);
+			}
+		});
+		Double[] B = new Double[1000];
 		for (int i = 0; i < 1000; i++) {
-			double head = Q.poll();
-			assertTrue("sorted", prev >= head);
-			prev = head;
-		}
+			B[i] = Q.poll();
+		}		
 		assertNull("empty at the end", Q.poll());		
+		assertArrayEquals(A, B);
+	}
+
+	static void debug(Object...os) {
+		System.err.printf("%.65536s\n", Arrays.deepToString(os));
 	}
 
 	@Test
