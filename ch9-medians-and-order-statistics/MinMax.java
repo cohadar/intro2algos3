@@ -33,4 +33,21 @@ public class MinMax {
 		return new int[] { min, max };
 	}
 
+	public static int[] minMin(int[] A) {
+		assert A.length > 1;
+		int m1 = Math.min(A[0], A[1]);
+		int m2 = Math.max(A[0], A[1]);
+		for (int i = 2; i < A.length; i++) {
+			if (m2 > A[i]) {
+				if (m1 > A[i]) {
+					m2 = m1;
+					m1 = A[i];
+				} else {
+					m2 = A[i];
+				}
+			}
+		}
+		return new int[] { m1, m2 };
+	}
+
 }

@@ -37,6 +37,24 @@ public class MinMaxTest {
 		}
 	}
 
+	@Test
+	public void testMinMin() {
+		for (int t = 0; t < 100; t++) {
+			int[] A = randomArray(2 + random.nextInt(1000), -1000, 1000);
+			int[] mm = MinMax.minMin(A);
+			int m1 = min(A);
+			for (int i = 0; i < A.length; i++) {
+				if (A[i] == m1) {
+					A[i] = Integer.MAX_VALUE;
+					break;
+				}
+			}
+			int m2 = min(A);
+			assertEquals("min1", m1, mm[0]);
+			assertEquals("min2", m2, mm[1]);
+		}
+	}	
+
 	public static Random random = new Random();
 	
 	public static int[] randomArray(int n, int min, int max) {
@@ -45,6 +63,10 @@ public class MinMaxTest {
 			A[i] = min + random.nextInt(max - min + 1);
 		}
 		return A;
+	}
+
+	static void debug(Object...os) {
+		System.err.printf("%.65536s\n", Arrays.deepToString(os));
 	}
 
 }
