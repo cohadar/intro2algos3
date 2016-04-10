@@ -42,18 +42,26 @@ public class MinMaxTest {
 		for (int t = 0; t < 100; t++) {
 			int[] A = randomArray(2 + random.nextInt(1000), -1000, 1000);
 			int[] mm = MinMax.minMin(A);
-			int m1 = min(A);
-			for (int i = 0; i < A.length; i++) {
-				if (A[i] == m1) {
-					A[i] = Integer.MAX_VALUE;
-					break;
-				}
-			}
-			int m2 = min(A);
-			assertEquals("min1", m1, mm[0]);
-			assertEquals("min2", m2, mm[1]);
+			Arrays.sort(A);
+			assertEquals("min1", A[0], mm[0]);
+			assertEquals("min2", A[1], mm[1]);
 		}
 	}	
+
+	@Test 
+	public void testOrderStatistic() {
+		for (int t = 0; t < 100; t++) {
+			int[] A = randomArray(2 + random.nextInt(1000), -1000, 1000);
+			int order = 1 + random.nextInt(A.length);
+			int v = MinMax.orderStatistic(A, 0, A.length - 1, order);
+			int min = MinMax.orderStatistic(A, 0, A.length - 1, 1);
+			int max = MinMax.orderStatistic(A, 0, A.length - 1, A.length);
+			Arrays.sort(A);
+			assertEquals("order rnd", A[order - 1], v);
+			assertEquals("order min", A[0], min);
+			assertEquals("order max", A[A.length - 1], max);
+		}
+	}
 
 	public static Random random = new Random();
 	

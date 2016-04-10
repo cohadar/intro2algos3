@@ -50,4 +50,41 @@ public class MinMax {
 		return new int[] { m1, m2 };
 	}
 
+	public static int partition(int[] A, int l, int r) {
+		swap(A, nextInt(l, r), r);
+		int v = A[r];
+		int p = l - 1;
+		for (int i = l; i < r; i++) {
+			if (A[i] <= v) {
+				swap(A, ++p, i);
+			}
+		}
+		swap(A, ++p, r);
+		return p;
+	}
+
+	public static int orderStatistic(int[] A, int l, int r, int order) {
+		int p = partition(A, l, r);
+		int k = p - l + 1;
+		if (k == order) {
+			return A[p];
+		} 
+		if (order < k) {
+			return orderStatistic(A, l, p - 1, order);
+		} else {
+			return orderStatistic(A, p + 1, r, order - k);
+		}
+	}
+
+	public static Random random = new Random();
+
+	public static int nextInt(int l, int r) {
+		return l + random.nextInt(r - l + 1);
+	}
+
+	static void swap(int[] A, int i, int j) {
+		int t = A[i];
+		A[i] = A[j];
+		A[j] = t;
+	}
 }
