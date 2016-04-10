@@ -8,6 +8,13 @@ import org.junit.Test;
 public class QuickSortTest {
 
 	@Test
+	public void testWithDutch() {
+		int[] A = randomArray(1000, -1000, 1000);
+		QuickSort.sort_with_dutch(A, 0, A.length - 1);
+		assertTrue("sorted", isSorted(A));
+	}	
+
+	@Test
 	public void testWithHoare() {
 		int[] A = randomArray(1000, -1000, 1000);
 		QuickSort.sort_with_hoare(A, 0, A.length - 1);
