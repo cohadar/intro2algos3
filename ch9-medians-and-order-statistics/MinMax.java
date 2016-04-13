@@ -64,6 +64,7 @@ public class MinMax {
 	}
 
 	public static int orderStatistic(int[] A, int l, int r, int order) {
+		assert 1 <= order && order <= A.length : "out of range, order: " + order;
 		int p = partition(A, l, r);
 		int k = p - l + 1;
 		if (k == order) {
