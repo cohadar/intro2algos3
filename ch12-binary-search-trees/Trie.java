@@ -5,7 +5,7 @@ import java.util.function.*;
 /**
   * @author Mighty Cohadar 
   */
-public class Trie {  // TODO: K key generic
+public class Trie<V> { 
 
 	public static class Alphabet {
 		final int size;
@@ -37,11 +37,7 @@ public class Trie {  // TODO: K key generic
 
 	private static class Node {
 		Object value;
-		final Node[] children;
-		// TODO: lazy init children?
-		public Node(int alphabetSize) {
-			this.children = new Node[alphabetSize];
-		}
+		Node[] children;
 	}
 
 	private Trie(Alphabet alphabet, String prefix, Node root) {
@@ -51,42 +47,50 @@ public class Trie {  // TODO: K key generic
 	}	
 
 	private Trie(Alphabet alphabet, String prefix) {
-		this(alphabet, prefix, new Node(alphabet.size));
+		this(alphabet, prefix, new Node());
 	}
 
 	public Trie(Alphabet alphabet) {
-		this(alphabet, "", new Node(alphabet.size));
+		this(alphabet, "", new Node());
 	}
 
-	public Object put(String key, Object value) {
+	@SuppressWarnings("unchecked")
+	public V put(String key, V value) {
 		Node parent = root;
 		for (int i = 0; i < key.length(); i++) {
 			int index = alphabet.toIndex(key.charAt(i));
+			if (parent.children == null) {
+				parent.children = new Node[alphabet.size];
+			}
 			Node child = parent.children[index];
 			if (child == null) {
-				child = parent.children[index] = new Node(alphabet.size);
+				child = parent.children[index] = new Node();
 			}
 			parent = child;
 		}
 		Object ret = parent.value;
 		parent.value = value;
-		return ret;
+		return (V)ret;
 	}
 
-	public Object get(String key) {
+	@SuppressWarnings("unchecked")
+	public V get(String key) {
 		Node parent = root;
 		for (int i = 0; i < key.length(); i++) {
 			int index = alphabet.toIndex(key.charAt(i));
+			if (parent.children == null) {
+				parent.children = new Node[alphabet.size];
+			}			
 			Node child = parent.children[index];
 			if (child == null) {
 				return null;
 			}
 			parent = child;
 		}
-		return parent.value;
+		return (V)parent.value;
 	}
 
-	public Trie subTrie(String keyPrefix) {
+	public Trie<V> subTrie(String keyPrefix) {
 		if (keyPrefix == null) {
 			throw new NullPointerException("keyPrefix");
 		}
@@ -96,6 +100,9 @@ public class Trie {  // TODO: K key generic
 		Node parent = root;
 		for (int i = 0; i < keyPrefix.length(); i++) {
 			int index = alphabet.toIndex(keyPrefix.charAt(i));
+			if (parent.children == null) {
+				parent.children = new Node[alphabet.size];
+			}			
 			Node child = parent.children[index];
 			if (child == null) {
 				return null;
@@ -105,18 +112,18 @@ public class Trie {  // TODO: K key generic
 		if (parent == null) {
 			return null;
 		}
-		return new Trie(alphabet, prefix + keyPrefix, parent);
+		return new Trie<V>(alphabet, prefix + keyPrefix, parent);
 	}
 
 	// lexicographic traversal
-	public <V> void forEach(BiConsumer<String, V> biConsumer) {
+	public void forEach(BiConsumer<String, V> biConsumer) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
 		forEach(biConsumer, sb, root);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <V> void forEach(BiConsumer<String, V> biConsumer, StringBuilder sb, Node parent) { 
+	private void forEach(BiConsumer<String, V> biConsumer, StringBuilder sb, Node parent) { 
 		if (parent.value != null) {
 			biConsumer.accept(sb.toString(), (V)parent.value);
 		}

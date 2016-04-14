@@ -35,7 +35,7 @@ public class TrieTest {
 		for (int i = 0; i < D.length; i++) {
 			D[i] = Math.random();
 		}
-		Trie T = new Trie(doubleAlphabet);
+		Trie<Double> T = new Trie<Double>(doubleAlphabet);
 		for (int i = 0; i < D.length; i++) {
 			assertNull(T.get(key(D[i])));
 			T.put(key(D[i]), D[i]);
@@ -69,7 +69,7 @@ public class TrieTest {
 	@Test 
 	public void testForEach() {
 		Set<String> S = new HashSet<>();
-		Trie T = new Trie(hexAlphabet);
+		Trie<Integer> T = new Trie<Integer>(hexAlphabet);
 		for (int i = 0; i < 1000; i++) {
 			int v = nextInt(0, 0xFFFFFF);
 			String key = hexKey(v);
@@ -91,7 +91,7 @@ public class TrieTest {
 	@Test 
 	public void testSubTrie() {
 		Set<String> S = new HashSet<>();
-		Trie T = new Trie(hexAlphabet);
+		Trie<Integer> T = new Trie<Integer>(hexAlphabet);
 		for (int i = 0; i < 1000; i++) {
 			int v = nextInt(0, 0xFFFFFF);
 			String key = hexKey(v);
@@ -122,7 +122,7 @@ public class TrieTest {
 	@Test 
 	public void testSubSubTrie() {
 		Set<String> S = new HashSet<>();
-		Trie T = new Trie(hexAlphabet);
+		Trie<Integer> T = new Trie<Integer>(hexAlphabet);
 		for (int i = 0; i < 1000; i++) {
 			int v = nextInt(0, 0xFFFFFF);
 			String key = hexKey(v);
