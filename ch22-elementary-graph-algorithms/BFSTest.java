@@ -40,6 +40,9 @@ public class BFSTest {
 			sb.append(String.format("(%d p=%d d=%d) ", i, P[i], D[i]));
 		}
 		System.out.println(sb);
+		for (int i = 0; i < D.length; i++) {
+			assertTrue(D[i] >= 0);
+		}
 	}
 
 	@Test

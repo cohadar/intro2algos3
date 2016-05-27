@@ -9,7 +9,7 @@ public class RandomGraph {
 
 	static Random random = new Random();
 
-	static int[] randomPermutation(int n) {
+	public static int[] randomPermutation(int n) {
 		int[] P = new int[n];
 		for (int i = 0; i < P.length; i++) {
 			P[i] = i;
@@ -24,28 +24,30 @@ public class RandomGraph {
 	}
 
 	public static List<Set<Integer>> undirectedTree(int nv) {
-		int[] P1 = randomPermutation(nv);
-		int[] P2 = randomPermutation(nv);
-		NavigableSet<Integer> S1 = new TreeSet<>(new Comparator<Integer> () {
-			public int compare(Integer a, Integer b) {
-				return Integer.compare(P1[a], P2[b]);
-			}
-		});
-		NavigableSet<Integer> S2 = new TreeSet<>((a, b) -> Integer.compare(P2[a], P2[b]));
-		for (int i = 0; i < nv; i++) {
-			S2.add(i);
-		}
-		S1.add(S2.pollFirst());
+		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
 		for (int i = 0; i < nv; i++) {
 			G.add(new HashSet<Integer>());
 		}
-		// generate spanning tree
-		for (int b : S2) {
-			int a = S1.first();
-			G.get(a).add(b);
-			G.get(b).add(a);
-			S1.add(b);
+		// totally connected undirected graph with random weights
+		PriorityQueue<Edge> Q = new PriorityQueue<>((a, b) -> Double.compare(a.w, b.w));
+		for (int y = 0; y < nv; y++) {
+			for (int x = y + 1; x < nv; x++) {
+				Q.add(new Edge(x, y, Math.random()));
+			}
+		}
+		// Prim's for minimum spanning tree
+		Set<Integer> S = new HashSet<>();
+		S.add(random.nextInt(nv));
+		while (!Q.isEmpty()) {
+			Edge e = Q.poll();
+			boolean ca = S.contains(e.a);
+			boolean cb = S.contains(e.b);
+			if (ca != cb) {
+				G.get(e.a).add(e.b);
+				G.get(e.b).add(e.a);
+				S.add((ca) ? e.b : e.a);
+			}
 		}
 		return G;
 	}
@@ -66,4 +68,18 @@ public class RandomGraph {
 	}
 
 
+}
+
+class Edge {
+	final int a;
+	final int b;
+	final double w;
+	Edge(int a, int b, double w) {
+		this.a = a;
+		this.b = b;
+		this.w = w;
+	}
+	public String toString() {
+		return String.format("(a=%d, b=%d, w=%f)", a, b, w);
+	}	
 }
