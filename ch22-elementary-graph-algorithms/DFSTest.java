@@ -28,7 +28,6 @@ public class DFSTest {
 		for (int i = 0; i < C.length; i++) {
 			if (C[i] == WHITE) {
 				dfs_rec(G, i);
-				TB[i] = time++; // easy to forget this one
 			}
 		}
 	}
@@ -41,10 +40,10 @@ public class DFSTest {
 			if (C[b] == WHITE) {
 				P[b] = a;
 				dfs_rec(G, b);
-				TB[b] = time++;
 			}
 		}
 		C[a] = BLACK;
+		TB[a] = time++;
 	}
 
 	@Test
@@ -52,6 +51,7 @@ public class DFSTest {
 		dfs(RandomGraph.undirected(10));
 		debug(TA);
 		debug(TB);
+		debug(P);
 	}
 
 	static void debug(Object...os) {
