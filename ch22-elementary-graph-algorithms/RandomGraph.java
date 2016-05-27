@@ -9,20 +9,6 @@ public class RandomGraph {
 
 	static Random random = new Random();
 
-	public static int[] randomPermutation(int n) {
-		int[] P = new int[n];
-		for (int i = 0; i < P.length; i++) {
-			P[i] = i;
-		}
-		for (int i = 0; i < P.length-1; i++) {
-			int j = i + random.nextInt(P.length - i);
-			int temp = P[i];
-			P[i] = P[j];
-			P[j] = temp;
-		}
-		return P;
-	}
-
 	public static List<Set<Integer>> undirectedTree(int nv) {
 		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
@@ -67,6 +53,24 @@ public class RandomGraph {
 		return G;
 	}
 
+	public static List<Set<Integer>> undirected(int nv) {
+		// new graph
+		List<Set<Integer>> G = new ArrayList<>();
+		for (int i = 0; i < nv; i++) {
+			G.add(new HashSet<Integer>());
+		}
+		// random edges
+		int more = (int)Math.sqrt(nv) * nv;
+		for (int i = 0; i < more; i++) {
+			int a = random.nextInt(nv);
+			int b = random.nextInt(nv);
+			if (a != b) {
+				G.get(a).add(b);
+				G.get(b).add(a);
+			}
+		}
+		return G;
+	}
 
 }
 
