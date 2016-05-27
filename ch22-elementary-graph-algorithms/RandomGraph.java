@@ -13,7 +13,7 @@ public class RandomGraph {
 		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
 		for (int i = 0; i < nv; i++) {
-			G.add(new HashSet<Integer>());
+			G.add(new TreeSet<Integer>());
 		}
 		// totally connected undirected graph with random weights
 		PriorityQueue<Edge> Q = new PriorityQueue<>((a, b) -> Double.compare(a.w, b.w));
@@ -57,7 +57,7 @@ public class RandomGraph {
 		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
 		for (int i = 0; i < nv; i++) {
-			G.add(new HashSet<Integer>());
+			G.add(new TreeSet<Integer>());
 		}
 		// random edges
 		int more = (int)Math.sqrt(nv) * nv;
