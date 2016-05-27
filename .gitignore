@@ -16,3 +16,9 @@ hs_err_pid*
 *.in
 *.out
 test-output/
+
+*.1in
+*.1out
+*.4in
+*.4out
+*.actual
