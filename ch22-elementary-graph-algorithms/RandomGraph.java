@@ -9,10 +9,10 @@ public class RandomGraph {
 
 	static Random random = new Random();
 
-	public static List<Set<Integer>> undirectedTree(int nv) {
+	public static List<List<Integer>> undirectedTree(int nv) {
 		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
-		for (int i = 0; i < nv; i++) {
+		for (int i = 0; i < nv; i++) {			
 			G.add(new TreeSet<Integer>());
 		}
 		// totally connected undirected graph with random weights
@@ -35,11 +35,12 @@ public class RandomGraph {
 				S.add((ca) ? e.b : e.a);
 			}
 		}
-		return G;
+		// convert
+		return set2List(G);
 	}
 
-	public static List<Set<Integer>> undirectedConnected(int nv) {
-		List<Set<Integer>> G = undirectedTree(nv);
+	public static List<List<Integer>> undirectedConnected(int nv) {
+		List<Set<Integer>> G = list2Set(undirectedTree(nv));
 		// some more random edges
 		int more = (int)Math.sqrt(nv) * nv;
 		for (int i = 0; i < more; i++) {
@@ -50,10 +51,11 @@ public class RandomGraph {
 				G.get(b).add(a);
 			}
 		}
-		return G;
+		// convert
+		return set2List(G);
 	}
 
-	public static List<Set<Integer>> undirected(int nv) {
+	public static List<List<Integer>> undirected(int nv) {
 		// new graph
 		List<Set<Integer>> G = new ArrayList<>();
 		for (int i = 0; i < nv; i++) {
@@ -69,7 +71,24 @@ public class RandomGraph {
 				G.get(b).add(a);
 			}
 		}
-		return G;
+		// convert
+		return set2List(G);
+	}
+
+	public static List<Set<Integer>> list2Set(List<List<Integer>> G) {
+		List<Set<Integer>> R = new ArrayList<>();
+		for (List<Integer> L : G) {
+			R.add(new TreeSet<Integer>(L));
+		}
+		return R;
+	}
+
+	public static List<List<Integer>> set2List(List<Set<Integer>> G) {
+		List<List<Integer>> R = new ArrayList<>();
+		for (Set<Integer> S : G) {
+			R.add(new ArrayList<Integer>(S));
+		}
+		return R;
 	}
 
 }

@@ -12,7 +12,7 @@ public class BFSTest {
 	public static final int GRAY = 1;
 	public static final int BLACK = 2;
 
-	public static void bfs(List<Set<Integer>> G, int sa) {
+	public static void bfs(List<List<Integer>> G, int sa) {
 		byte[] V = new byte[G.size()];
 		int[] D = new int[G.size()];
 		int[] P = new int[G.size()];

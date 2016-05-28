@@ -17,9 +17,11 @@ public class DFSTest {
 	int[] TL;
 	int[] TR;
 	int[] P;
+	StringBuilder sb;
 
-	int[] dfs1(List<Set<Integer>> G) {
+	int[] dfs1(List<List<Integer>> G) {
 		time = 0;
+		sb = new StringBuilder();
 		this.nv = G.size();
 		this.C = new byte[nv];
 		this.TL = new int[nv];
@@ -31,11 +33,13 @@ public class DFSTest {
 				dfs_rec(G, i);
 			}
 		}
-		return TL;
+		debug(sb);
+		return TR;
 	}
 
-	int[] dfs2(List<Set<Integer>> G) {
+	int[] dfs2(List<List<Integer>> G) {
 		time = 0;
+		sb = new StringBuilder();
 		this.nv = G.size();
 		this.C = new byte[nv];
 		this.TL = new int[nv];
@@ -47,15 +51,15 @@ public class DFSTest {
 				dfs_iter(G, i);
 			}
 		}
-		debug(TL);
-		debug(TR);
-		return TL;
+		debug(sb);
+		return TR;
 	}
 
-	void dfs_rec(List<Set<Integer>> G, int a) {
+	void dfs_rec(List<List<Integer>> G, int a) {
 		assert C[a] == WHITE;
 		C[a] = GRAY;
-		TL[a] = time++;
+		TL[a] = ++time;
+		sb.append(String.format("%d(%d) ", a, TL[a]));
 		for (int b : G.get(a)) {
 			if (C[b] == WHITE) {
 				P[b] = a;
@@ -63,34 +67,47 @@ public class DFSTest {
 			}
 		}
 		C[a] = BLACK;
-		TR[a] = time++;
+		TR[a] = ++time;
 	}
 
-	void dfs_iter(List<Set<Integer>> G, int sa) {
+	// this version is very bad on graphs with large node arity
+	// will do proper trampoline later
+	void dfs_iter(List<List<Integer>> G, int sa) {
 		Deque<Integer> S = new ArrayDeque<>();
-		TL[sa] = time++;
+		S.push(~sa);
+		S.push(-1);
 		S.push(sa);
 		while (!S.isEmpty()) {
 			int a = S.pop();
-			if (C[a] == WHITE) {
+			if (a < 0) {
+				C[~a] = BLACK;
+				TR[~a] = ++time;
+			} else if (C[a] == WHITE) {
+				P[a] = S.pop();
 				C[a] = GRAY;
-				for (int b : G.get(a)) {
-					TL[b] = time++;
+				TL[a] = ++time;
+				sb.append(String.format("%d(%d) ", a, TL[a]));
+				ListIterator<Integer> i = G.get(a).listIterator(G.get(a).size());
+				while (i.hasPrevious()) {
+					int b = i.previous();
+					S.push(~b);
+					S.push(a);
 					S.push(b);
-					debug(TL);
 				}
+			} else {
+				// junk
+				S.pop();
+				S.pop();
 			}
 		}
 	}
 
 	@Test
 	public void testDFS() {
-		List<Set<Integer>> G = RandomGraph.undirected(10);
+		List<List<Integer>> G = RandomGraph.undirected(10);
 		int[] P1 = dfs1(G);
 		int[] P2 = dfs2(G);
-		// debug(P1);
-		// debug(P2);
-		// assertArrayEquals(P1, P2);
+		assertArrayEquals(P1, P2);
 	}
 
 	static void debug(Object...os) {
