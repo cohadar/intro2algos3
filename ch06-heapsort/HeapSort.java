@@ -13,23 +13,20 @@ public class HeapSort {
 	}
 
 	public static void maxHeapify(int[] H, int n, int p) {
-		while (true) {
-			int l = p * 2;
-			int r = l + 1;
-			int imax = p;
-			if (l <= n && H[l] > H[imax]) {
-				imax = l;
-			}
-			if (r <= n && H[r] > H[imax]) {
-				imax = r;
-			}
-			if (imax == p) {
-				break;
-			} else {
-				swap(H, p, imax);
-				p = imax;
-			}
+		int l = p * 2;
+		int r = l + 1;
+		int imax = p;
+		if (l <= n && H[l] > H[imax]) {
+			imax = l;
 		}
+		if (r <= n && H[r] > H[imax]) {
+			imax = r;
+		}
+		if (imax == p) {
+			return;
+		}
+		swap(H, p, imax);
+		maxHeapify(H, n, imax);
 	}
 
 	public static void buildMaxHeap(int[] H, int n) {
