@@ -59,10 +59,10 @@ public class InsertionSortTest {
 
 	public static Random random = new Random();
 	
-	public static int[] randomArray(int n, int l, int f) {
+	public static int[] randomArray(int n, int li, int re) {
 		int[] A = new int[n];
 		for (int i = 0; i < n; i++) {
-			A[i] = l + random.nextInt(f - l);
+			A[i] = li + random.nextInt(re - li);
 		}
 		return A;
 	}
