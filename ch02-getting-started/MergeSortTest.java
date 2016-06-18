@@ -7,21 +7,15 @@ import org.junit.Test;
   */
 public class MergeSortTest {
 
-	static void swap(int[] A, int i, int j) {
-		int t = A[i];
-		A[i] = A[j];
-		A[j] = t;
-	}
-
 	static void insertionSort(int[] A, int li, int re) {
 		for (int r = li + 1; r < re; r++) {
 			int val = A[r];
 			int l = r;
-			while (li < l && A[l-1] > A[l]) {
+			while (li < l && A[l-1] > val) {
 				A[l] = A[l-1];
 				l--;
 			}
-			swap(A, l, r);
+			A[l] = val;
 		}
 	}
 
@@ -64,7 +58,9 @@ public class MergeSortTest {
 
 	private void test(int[] A, int l, int re) {
 		int[] B = Arrays.copyOf(A, A.length);
+		int[] C = Arrays.copyOf(A, A.length);
 		mergeSort(B, l, re); // <---------<<
+		Arrays.sort(C, l, re);
 		for (int i = 0; i < l; i++) {
 			assertEquals("left", A[i], B[i]);
 		}
@@ -74,6 +70,7 @@ public class MergeSortTest {
 		for (int i = l + 1; i < re; i++) {
 			assertTrue("sorted", B[i-1] <= B[i]);
 		}
+		assertArrayEquals("control", B, C);
 	}
 
 	@Test
