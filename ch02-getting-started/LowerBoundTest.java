@@ -7,27 +7,58 @@ import org.junit.Test;
   */
 public class LowerBoundTest {
 
-	public int lowerBoundLinear(int[] A, int v, int l, int r) {
-		for (int i = 0; i < A.length; i++) {
+	static int lowerBound(int[] A, int v, int li, int re) {
+		while (li < re) {
+			int mi = (li + re) >>> 1;
+			if (A[mi] < v) {
+				li = mi + 1;
+			} else {
+				re = mi;
+			}
+		}
+		return li;
+	}
+
+	static int lowerBoundRec(int[] A, int v, int li, int re) {
+		if (li < re) {
+			int mi = (li + re) >>> 1;
+			if (A[mi] < v) {
+				return lowerBound(A, v, mi + 1, re);
+			} else {
+				return lowerBound(A, v, li, mi);
+			}
+		}
+		return li;
+	}
+
+	static int lowerBoundLinear(int[] A, int v, int li, int re) {
+		int i = li;
+		for (; i < re; i++) {
 			if (A[i] >= v) {
 				return i;
 			}
 		}
-		return A.length;
+		return i;
 	}
 
 	private void test1() {
-		int[] A = randomArray(1000, -1000, 1000);
+		int[] A = randomArray(10000, -1000, 1000);
 		Arrays.sort(A);
 		int v = nextInt(-1100, 1100);
-		int a = lowerBoundLinear(A, v, 0, A.length - 1);
-		int b = LowerBound.lowerBound(A, v, 0, A.length - 1);
+		int t1 = random.nextInt(A.length);
+		int t2 = random.nextInt(A.length);
+		int li = Math.min(t1, t2);
+		int re = Math.max(t1, t2) + 1;
+		int a = lowerBoundLinear(A, v, li, re);
+		int b = lowerBound(A, v, li, re);
+		int c = lowerBoundRec(A, v, li, re);
 		assertEquals(a, b);
+		assertEquals(a, c);
 	}
 
 	@Test
 	public void test() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			test1();
 		}
 	}
