@@ -7,10 +7,10 @@ import org.junit.Test;
   */
 public class UpperBoundTest {
 
-	static int upperBound(int[] A, int v, int li, int re) {
+	static int upperBound(int[] A, int li, int re, int val) {
 		while (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] > v) {
+			if (A[mi] > val) {
 				re = mi;
 			} else {
 				li = mi + 1;
@@ -19,22 +19,22 @@ public class UpperBoundTest {
 		return li;
 	}
 
-	static int upperBoundRec(int[] A, int v, int li, int re) {
+	static int upperBoundRec(int[] A, int li, int re, int val) {
 		if (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] > v) {
-				return upperBoundRec(A, v, li, mi);
+			if (A[mi] > val) {
+				return upperBoundRec(A, li, mi, val);
 			} else {
-				return upperBoundRec(A, v, li + 1, re);
+				return upperBoundRec(A, li + 1, re, val);
 			}
 		}
 		return li;
 	}
 
-	static int upperBoundLinear(int[] A, int v, int li, int re) {
+	static int upperBoundLinear(int[] A, int li, int re, int val) {
 		int i = li;
 		for (; i < re; i++) {
-			if (A[i] > v) {
+			if (A[i] > val) {
 				return i;
 			}
 		}
@@ -44,14 +44,14 @@ public class UpperBoundTest {
 	private void test1() {
 		int[] A = randomArray(10000, -1000, 1000);
 		Arrays.sort(A);
-		int v = nextInt(-1100, 1100);
+		int val = nextInt(-1100, 1100);
 		int t1 = random.nextInt(A.length);
 		int t2 = random.nextInt(A.length);
 		int li = Math.min(t1, t2);
 		int re = Math.max(t1, t2) + 1;
-		int a = upperBoundLinear(A, v, li, re);
-		int b = upperBound(A, v, li, re);
-		int c = upperBoundRec(A, v, li, re);
+		int a = upperBoundLinear(A, li, re, val);
+		int b = upperBound(A, li, re, val);
+		int c = upperBoundRec(A, li, re, val);
 		assertEquals(a, b);
 		assertEquals(a, c);
 	}

@@ -7,10 +7,10 @@ import org.junit.Test;
   */
 public class LowerBoundTest {
 
-	static int lowerBound(int[] A, int v, int li, int re) {
+	static int lowerBound(int[] A, int li, int re, int val) {
 		while (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] >= v) {
+			if (A[mi] >= val) {
 				re = mi;
 			} else {
 				li = mi + 1;
@@ -19,22 +19,22 @@ public class LowerBoundTest {
 		return li;
 	}
 
-	static int lowerBoundRec(int[] A, int v, int li, int re) {
+	static int lowerBoundRec(int[] A, int li, int re, int val) {
 		if (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] >= v) {
-				return lowerBoundRec(A, v, li, mi);
+			if (A[mi] >= val) {
+				return lowerBoundRec(A, li, mi, val);
 			} else {
-				return lowerBoundRec(A, v, li + 1, re);
+				return lowerBoundRec(A, li + 1, re, val);
 			}
 		}
 		return li;
 	}
 
-	static int lowerBoundLinear(int[] A, int v, int li, int re) {
+	static int lowerBoundLinear(int[] A, int li, int re, int val) {
 		int i = li;
 		for (; i < re; i++) {
-			if (A[i] >= v) {
+			if (A[i] >= val) {
 				return i;
 			}
 		}
@@ -44,14 +44,14 @@ public class LowerBoundTest {
 	private void test1() {
 		int[] A = randomArray(10000, -1000, 1000);
 		Arrays.sort(A);
-		int v = nextInt(-1100, 1100);
+		int val = nextInt(-1100, 1100);
 		int t1 = random.nextInt(A.length);
 		int t2 = random.nextInt(A.length);
 		int li = Math.min(t1, t2);
 		int re = Math.max(t1, t2) + 1;
-		int a = lowerBoundLinear(A, v, li, re);
-		int b = lowerBound(A, v, li, re);
-		int c = lowerBoundRec(A, v, li, re);
+		int a = lowerBoundLinear(A, li, re, val);
+		int b = lowerBound(A, li, re, val);
+		int c = lowerBoundRec(A, li, re, val);
 		assertEquals(a, b);
 		assertEquals(a, c);
 	}
