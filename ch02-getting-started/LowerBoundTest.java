@@ -10,10 +10,10 @@ public class LowerBoundTest {
 	static int lowerBound(int[] A, int v, int li, int re) {
 		while (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] < v) {
-				li = mi + 1;
-			} else {
+			if (A[mi] >= v) {
 				re = mi;
+			} else {
+				li = mi + 1;
 			}
 		}
 		return li;
@@ -22,10 +22,10 @@ public class LowerBoundTest {
 	static int lowerBoundRec(int[] A, int v, int li, int re) {
 		if (li < re) {
 			int mi = (li + re) >>> 1;
-			if (A[mi] < v) {
-				return lowerBound(A, v, mi + 1, re);
+			if (A[mi] >= v) {
+				return lowerBoundRec(A, v, li, mi);
 			} else {
-				return lowerBound(A, v, li, mi);
+				return lowerBoundRec(A, v, li + 1, re);
 			}
 		}
 		return li;
