@@ -54,7 +54,7 @@ public class MergeSortTest {
 			int mi = (li + re) >>> 1;
 			mergeSort(A, B, li, mi);
 			mergeSort(A, B, mi, re);
-			merge(A, B, li, mi, re);	
+			merge(A, B, li, mi, re);
 		}
 	}
 
