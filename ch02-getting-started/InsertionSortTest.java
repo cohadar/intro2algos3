@@ -7,16 +7,34 @@ import org.junit.Test;
   */
 public class InsertionSortTest {
 
-	private void test(int[] A, int left, int right) {
+	static void swap(int[] A, int i, int j) {
+		int t = A[i];
+		A[i] = A[j];
+		A[j] = t;
+	}
+
+	static void insertionSort(int[] A, int li, int re) {
+		for (int r = li + 1; r < re; r++) {
+			int val = A[r];
+			int l = r;
+			while (li < l && A[l-1] > A[l]) {
+				A[l] = A[l-1];
+				l--;
+			}
+			swap(A, l, r);
+		}
+	}
+
+	private void test(int[] A, int l, int re) {
 		int[] B = Arrays.copyOf(A, A.length);
-		InsertionSort.insertionSort(B, left, right);
-		for (int i = 0; i < left; i++) {
+		insertionSort(B, l, re); // <---------<<
+		for (int i = 0; i < l; i++) {
 			assertEquals("left", A[i], B[i]);
 		}
-		for (int i = right + 1; i < A.length; i++) {
-			assertEquals("right", A[i], B[i]);
+		for (int i = re; i < A.length; i++) {
+			assertEquals("re", A[i], B[i]);
 		}
-		for (int i = left + 1; i <= right; i++) {
+		for (int i = l + 1; i < re; i++) {
 			assertTrue("sorted", B[i-1] <= B[i]);
 		}
 	}
@@ -41,10 +59,10 @@ public class InsertionSortTest {
 
 	public static Random random = new Random();
 	
-	public static int[] randomArray(int n, int min, int max) {
+	public static int[] randomArray(int n, int l, int f) {
 		int[] A = new int[n];
 		for (int i = 0; i < n; i++) {
-			A[i] = min + random.nextInt(max - min + 1);
+			A[i] = l + random.nextInt(f - l);
 		}
 		return A;
 	}
